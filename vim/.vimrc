@@ -1,4 +1,4 @@
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "               
 "               ██╗   ██╗██╗███╗   ███╗██████╗  ██████╗
 "               ██║   ██║██║████╗ ████║██╔══██╗██╔════╝
@@ -15,19 +15,19 @@
 "    -> VIM user interface
 "    -> Colors and Fonts
 "    -> Status line
-"    -> Helper functions
 "    -> Keybindings
 "       -> Buffers, tabs and windows
 "       -> Visual mode related
 "       -> Editing mappings
-"       -> vimgrep searching and cope displaying
+"       -> Search
 "       -> Spell checking
 "       -> Misc
+"    -> Helper functions
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => General
+" -> General
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set nobackup                    " Turn backup off
 set nowb
@@ -51,7 +51,7 @@ au FocusGained,BufEnter * silent! checktime
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => VIM user interface
+" -> VIM user interface
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set number relativenumber       " Enable relative number
 set so=7                        " Set 7 lines to the cursor - when moving vertically using j/k
@@ -95,8 +95,9 @@ let &t_EI = "\e[2 q"
 let &t_SR = "\e[3 q"
 let &t_ER = "\e[2 q"
 
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Colors and Fonts
+" -> Colors and Fonts
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set termguicolors                 " Enable termgui
 set regexpengine=0                " Set regular expression engine automatically
@@ -122,8 +123,9 @@ endtry
 
 hi Normal guibg=NONE ctermbg=NONE " Set background transparent
 
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Status line
+" -> Status line
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set laststatus=2
 set statusline=
@@ -132,9 +134,7 @@ set statusline+=%2*%{b:git_branch}%*                       "Git Status
 " set statusline+=%1*\ buff:%n\ %*                             "Buffer number
 set statusline+=%1*\ \󰷉\ %f\ %*                              "File path
 set statusline+=%1*%m%*                                      "Modified flag
-
 set statusline+=%1*\ %=\ %*                                  "Space between
-
 " set statusline+=%5*\ %{&spelllang}\%{HighlightSearch()}\     "Spellanguage & Highlight on?
 set statusline+=%1*\ %P\ \|\ %L\ L\ %*                       "Line and column number
 set statusline+=%5*\ \\ %y\ %*                              "File type
@@ -151,18 +151,207 @@ hi User6 guibg=#6c7086 guifg=#ffffff
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Helper functions
+" -> Keybindings
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let mapleader = " "
+
+" ':W' sudo saves the file (useful for handling the permission-denied error)
+command! W execute 'w !sudo tee % > /dev/null' <bar> edit!
+nmap <leader>q :q<cr>
+nmap <leader>R :so ~/.vimrc<cr>
+" Clear search highlights
+nnoremap <leader><esc> :noh<cr>
+" Open file explorer
+nnoremap <leader>e :Ex<cr>
+" Ctrl + s to save file
+nmap <C-s> :w<cr>
+imap <C-s> <esc>:w<cr>
+vmap <C-s> :w<cr>
+
+" Type jj to exit insert mode quickly.
+inoremap jj <Esc>
+
+" Pageup/down will scroll half-page and center the current line on the screen
+nmap     <silent> <C-u>      <C-U>zz
+nmap     <silent> <C-d>      <C-D>zz
+nnoremap <silent> <C-u>      <C-U>zz
+nnoremap <silent> <C-d>      <C-D>zz
+nnoremap <silent> <PageUp>   <C-U>zz
+vnoremap <silent> <PageUp>   <C-U>zz
+inoremap <silent> <PageUp>   <C-O><C-U><C-O>zz
+nnoremap <silent> <PageDown> <C-D>zz
+vnoremap <silent> <PageDown> <C-D>zz
+inoremap <silent> <PageDown> <C-O><C-D><C-O>zz
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" -> Buffers, windows and tabs
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" :Bonly close all the buffers except current only
+command! Bonly silent! execute "%bd|e#|bd#"
+" Buffer navigation
+nmap <leader>bn :bnext<cr>
+nmap <leader>bp :bprevious<cr>
+" Close the current buffer
+nmap <leader>bd :Bdelete<cr>
+" Close all the buffers except current
+nmap <leader>bo :Bonly<cr>
+" Quickly open a buffer for scribble
+nmap <leader>bN :e ~/tmp/vim/buffer<cr>
+" Quickly open a markdown buffer for scribble
+nmap <leader>bm :e ~/tmp/vim/buffer.md<cr>
+" Switch CWD to the directory of the open buffer.
+nmap <leader>cd :cd %:p:h<cr>:pwd<cr>
+
+" Windows navigations
+nmap <C-j> <C-W>j
+nmap <C-k> <C-W>k
+nmap <C-h> <C-W>h
+nmap <C-l> <C-W>l
+nmap <leader>w <C-W>
+nmap <leader>\ :vsplit<cr>
+nmap <leader>- :split<cr>
+
+" Tabs navigations
+nmap <S-l> :tabn<cr>
+nmap <S-h> :tabp<cr>
+nmap <tab> :tabn<cr>
+nmap <S-tab> :tabp<cr>
+nmap <leader>tn :tabnew<cr>
+nmap <leader>tc :tabclose<cr>
+nmap <leader>to :tabonly<cr>
+nmap <leader>tm :tabmove
+" Toggle between this and the last accessed tab
+let g:lasttab = 1
+nmap <leader>tl :exe "tabn ".g:lasttab<CR>
+au TabLeave * let g:lasttab = tabpagenr()
+" Opens a new tab with the current buffer's path
+" Super useful when editing files in the same directory
+nmap <leader>te :tabedit <C-r>=escape(expand("%:p:h"), " ")<cr>/
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" -> Visual mode related
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Visual mode pressing * or # searches for the current selection
+vnoremap <silent> * :<C-u>call VisualSelection('', '')<CR>/<C-R>=@/<CR><CR>
+vnoremap <silent> # :<C-u>call VisualSelection('', '')<CR>?<C-R>=@/<CR><CR>
+" better indenting
+vnoremap < :<<cr>gv
+vnoremap > :><cr>gv
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" -> Editing mappings
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Move a line of text using ALT+[jk] or Command+[jk] on mac
+nnoremap <C-S-j> :m.+1<cr>
+nnoremap <C-S-k> :m.-2<cr>
+inoremap <C-S-j> <esc>:m.+1<cr>
+inoremap <C-S-k> <esc>:m.-2<cr>
+vnoremap <C-S-j> :m'>+1<cr>gv=gv
+vnoremap <C-S-k> :m'<-2<cr>gv=gv
+" Return to last edit position when opening files.
+" au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+if has("autocmd")
+    autocmd BufWritePre *.txt,*.js,*.py,*.wiki,*.sh,*.coffee :call CleanExtraSpaces()
+endif
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" -> Search
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" find files with fzf 
+nnoremap <leader>ff :Files<cr>
+" Grep search word with fzf 
+nnoremap <leader>fg :Rg<cr>
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" -> Spell checking
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Pressing ,ss will toggle and untoggle spell checking
+nmap <leader>ss :setlocal spell!<cr>
+
+" Shortcuts using <leader>
+nmap <leader>sn ]s
+nmap <leader>sp [s
+nmap <leader>sa zg
+nmap <leader>s? z=
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" -> Helper functions
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Delete trailing white space on save, useful for some filetypes ;)
+function! CleanExtraSpaces()
+	let save_cursor = getpos(".")
+	let old_query = getreg('/')
+	silent! %s/\s\+$//e
+	call setpos('.', save_cursor)
+	call setreg('/', old_query)
+endfunction
+
+" :Bdelete Don't close window, when deleting a buffer
+command! Bdelete call <SID>BufcloseCloseIt()
+function! <SID>BufcloseCloseIt()
+  let l:currentBufNum = bufnr("%")
+  let l:alternateBufNum = bufnr("#")
+  if buflisted(l:alternateBufNum)
+    buffer #
+  else
+    bnext
+  endif
+  if bufnr("%") == l:currentBufNum
+    new
+  endif
+  if buflisted(l:currentBufNum)
+    execute("bdelete! ".l:currentBufNum)
+  endif
+endfunction
+
+" :Files
+command! Files call FZF()
+function! FZF() abort
+	let l:tempname = tempname()
+	" fzf | awk '{ print $1":1:0" }' > file
+	execute 'silent !fzf --multi ' . '| awk ''{ print $1":1:0" }'' > ' . fnameescape(l:tempname)
+	try
+		execute 'cfile ' . l:tempname
+		redraw!
+	finally
+		call delete(l:tempname)
+	endtry
+endfunction
+
+" :Rg [pattern]
+command! -nargs=* Rg call RG(<q-args>)
+function! RG(args) abort
+	let l:tempname = tempname()
+	let l:pattern = '.'
+	if len(a:args) > 0
+		let l:pattern = a:args
+	endif
+	" rg --vimgrep <pattern> | fzf -m > file
+	execute 'silent !rg --vimgrep ''' . l:pattern . ''' | fzf -m > ' . fnameescape(l:tempname)
+	try
+		execute 'cfile ' . l:tempname
+		redraw!
+	finally
+		call delete(l:tempname)
+	endtry
+endfunction
+
 " Git status
 fun! GitBranch(file)
-    let l:dir = fnamemodify(system('readlink -f ' . a:file), ':h')
-    let l:cmd = 'git -C ' . l:dir . ' branch --show-current 2>/dev/null'
-    let b:git_branch = "  " .. trim(system(l:cmd)) .. " "
+  let l:dir = fnamemodify(system('readlink -f ' . a:file), ':h')
+  let l:cmd = 'git -C ' . l:dir . ' branch --show-current 2>/dev/null'
+  let b:git_branch = "  " .. trim(system(l:cmd)) .. " "
 endfun
 
 augroup GitBranch
-    autocmd!
-    autocmd BufEnter,ShellCmdPost,FileChangedShellPost * call GitBranch(expand('%'))
+  autocmd!
+  autocmd BufEnter,ShellCmdPost,FileChangedShellPost * call GitBranch(expand('%'))
 augroup END
 
 " Mode
@@ -200,46 +389,25 @@ function! HasPaste()
   endif
   return ''
 endfunction
-" Don't close window, when deleting a buffer
-command! Bclose call <SID>BufcloseCloseIt()
-function! <SID>BufcloseCloseIt()
-  let l:currentBufNum = bufnr("%")
-  let l:alternateBufNum = bufnr("#")
-
-  if buflisted(l:alternateBufNum)
-    buffer #
-  else
-    bnext
-  endif
-
-  if bufnr("%") == l:currentBufNum
-    new
-  endif
-
-  if buflisted(l:currentBufNum)
-    execute("bdelete! ".l:currentBufNum)
-  endif
-endfunction
 
 function! CmdLine(str)
   call feedkeys(":" . a:str)
 endfunction
+
 function! VisualSelection(direction, extra_filter) range
   let l:saved_reg = @"
   execute "normal! vgvy"
-
   let l:pattern = escape(@", "\\/.*'$^~[]")
   let l:pattern = substitute(l:pattern, "\n$", "", "")
-
   if a:direction == 'gv'
-      call CmdLine("Ack '" . l:pattern . "' " )
+    call CmdLine("Ack '" . l:pattern . "' " )
   elseif a:direction == 'replace'
-      call CmdLine("%s" . '/'. l:pattern . '/')
+    call CmdLine("%s" . '/'. l:pattern . '/')
   endif
-
   let @/ = l:pattern
   let @" = l:saved_reg
 endfunction
+
 function! HighlightSearch()
   if &hls
     return 'H'
@@ -247,132 +415,4 @@ function! HighlightSearch()
     return ''
   endif
 endfunction
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Keybindings
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let mapleader = " "
-
-" ':W' sudo saves the file (useful for handling the permission-denied error)
-command! W execute 'w !sudo tee % > /dev/null' <bar> edit!
-nmap <leader>q :q<cr>
-nmap <leader>R :so ~/.vimrc<cr>
-" Clear search highlights
-nnoremap <leader><esc> :noh<cr>
-" Ctrl + s to save file
-
-nmap <C-s> :w<cr>
-imap <C-s> <esc>:w<cr>
-vmap <C-s> :w<cr>
-
-" Type jj to exit insert mode quickly.
-inoremap jj <Esc>
-
-" Pageup/down will scroll half-page and center the current line on the screen
-nmap     <silent> <C-u>      <C-U>zz
-nmap     <silent> <C-d>      <C-D>zz
-nnoremap <silent> <C-u>      <C-U>zz
-nnoremap <silent> <C-d>      <C-D>zz
-nnoremap <silent> <PageUp>   <C-U>zz
-vnoremap <silent> <PageUp>   <C-U>zz
-inoremap <silent> <PageUp>   <C-O><C-U><C-O>zz
-nnoremap <silent> <PageDown> <C-D>zz
-vnoremap <silent> <PageDown> <C-D>zz
-inoremap <silent> <PageDown> <C-O><C-D><C-O>zz
-
-
-" Move a line of text using ALT+[jk] or Command+[jk] on mac
-nnoremap <C-S-j> :m.+1<cr>
-nnoremap <C-S-k> :m.-2<cr>
-inoremap <C-S-j> <esc>:m.+1<cr>
-inoremap <C-S-k> <esc>:m.-2<cr>
-vnoremap <C-S-j> :m'>+1<cr>gv=gv
-vnoremap <C-S-k> :m'<-2<cr>gv=gv
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Buffers, tabs and windows
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Buffer navigation
-nmap <S-l> :bnext<cr>
-nmap <S-h> :bprevious<cr>
-" Close the current buffer
-nmap <leader>bd :Bclose<cr>:tabclose<cr>gT
-" Close all the buffers
-nmap <leader>ba :bufdo bd<cr>
-" Quickly open a buffer for scribble
-nmap <leader>bn :e ~/tmp/vim/buffer<cr>
-" Quickly open a markdown buffer for scribble
-nmap <leader>bm :e ~/tmp/vim/buffer.md<cr>
-" Switch CWD to the directory of the open buffer.
-nmap <leader>cd :cd %:p:h<cr>:pwd<cr>
-
-" Windows navigations
-nmap <C-j> <C-W>j
-nmap <C-k> <C-W>k
-nmap <C-h> <C-W>h
-nmap <C-l> <C-W>l
-nmap <leader>w <C-W>
-nmap <leader>\| :vsplit<cr>
-nmap <leader>\- :split<cr>
-
-" Toggle between this and the last accessed tab
-let g:lasttab = 1
-nmap <leader><tab>l :exe "tabn ".g:lasttab<CR>
-au TabLeave * let g:lasttab = tabpagenr()
-" Tabs navigations
-nmap <tab>          :tabn<cr>
-nmap <S-tab>        :tabp<cr>
-nmap <leader><tab>n :tabnew<cr>
-nmap <leader><tab>o :tabonly<cr>
-nmap <leader><tab>c :tabclose<cr>
-nmap <leader><tab>m :tabmove
-" Opens a new tab with the current buffer's path
-" Super useful when editing files in the same directory
-nmap <leader><tab>e :tabedit <C-r>=escape(expand("%:p:h"), " ")<cr>/
-
-
-""""""""""""""""""""""""""""""
-" => Visual mode related
-""""""""""""""""""""""""""""""
-" Visual mode pressing * or # searches for the current selection
-vnoremap <silent> * :<C-u>call VisualSelection('', '')<CR>/<C-R>=@/<CR><CR>
-vnoremap <silent> # :<C-u>call VisualSelection('', '')<CR>?<C-R>=@/<CR><CR>
-" better indenting
-vnoremap < :<<cr>gv
-vnoremap > :><cr>gv
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Editing mappings
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Return to last edit position when opening files.
-" au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
-
-" Delete trailing white space on save, useful for some filetypes ;)
-fun! CleanExtraSpaces()
-    let save_cursor = getpos(".")
-    let old_query = getreg('/')
-    silent! %s/\s\+$//e
-    call setpos('.', save_cursor)
-    call setreg('/', old_query)
-endfun
-
-if has("autocmd")
-    autocmd BufWritePre *.txt,*.js,*.py,*.wiki,*.sh,*.coffee :call CleanExtraSpaces()
-endif
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Spell checking
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Pressing ,ss will toggle and untoggle spell checking
-nmap <leader>ss :setlocal spell!<cr>
-
-" Shortcuts using <leader>
-nmap <leader>sn ]s
-nmap <leader>sp [s
-nmap <leader>sa zg
-nmap <leader>s? z=
 
