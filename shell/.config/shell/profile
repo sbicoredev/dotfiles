@@ -6,7 +6,7 @@ typeset -U PATH path
 # add all directories in `~/.local/bin/` to $PATH
 export PATH="$PATH:$(find -L ~/.local/bin -type d | paste -sd ':' -)"
 export PATH="$BUN_INSTALL/bin:$PATH"
-export PATH="${DOTNET_ROOT:-$HOME/.local/share/dotnet}:$PATH"
+export PATH="${DOTNET_ROOT:-$HOME/.local/share/dotnet}:$HOME/.dotnet/tools:$PATH"
 export PATH="/usr/local/go/bin:$HOME/.local/lib/go/bin:${GOPATH:-$HOME/.local/share/go}/bin:$PATH"
 export PATH="$HOME/.config/herd-lite/bin:$PATH"
 export PATH="$HOME/.local/lib/nvim-linux-x86_64/bin:$PATH"

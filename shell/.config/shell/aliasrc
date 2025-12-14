@@ -37,8 +37,6 @@ alias lt-src="lt /etc/apt/ --level=3"
 # adding flags
 alias df='df -h'
 alias free='free -m'
-# docker
-alias docker="sudo docker"
 # ps
 alias psa="ps auxf"
 alias psgrep="ps aux | grep -v grep | grep -i -e VSZ -e"
