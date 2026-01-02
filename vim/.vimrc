@@ -42,6 +42,7 @@ set si                          " Smart indent
 set wrap                        " Wrap lines
 set history=500                 " Sets how many lines of history VIM has to remember
 set nocompatible                " Disable compatibility with vi which can cause unexpected issues.
+set clipboard=unnamedplus       " Copy to clipboard
 syntax enable                   " Enable syntax highlighting
 " Enable filetype plugins.
 filetype plugin on
