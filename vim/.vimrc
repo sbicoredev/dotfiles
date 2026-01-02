@@ -285,11 +285,11 @@ nmap <leader>s? z=
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Delete trailing white space on save, useful for some filetypes ;)
 function! CleanExtraSpaces()
-	let save_cursor = getpos(".")
-	let old_query = getreg('/')
-	silent! %s/\s\+$//e
-	call setpos('.', save_cursor)
-	call setreg('/', old_query)
+  let save_cursor = getpos(".")
+  let old_query = getreg('/')
+  silent! %s/\s\+$//e
+  call setpos('.', save_cursor)
+  call setreg('/', old_query)
 endfunction
 
 " :Bdelete Don't close window, when deleting a buffer
@@ -313,33 +313,33 @@ endfunction
 " :Files
 command! Files call FZF()
 function! FZF() abort
-	let l:tempname = tempname()
-	" fzf | awk '{ print $1":1:0" }' > file
-	execute 'silent !fzf --multi ' . '| awk ''{ print $1":1:0" }'' > ' . fnameescape(l:tempname)
-	try
-		execute 'cfile ' . l:tempname
-		redraw!
-	finally
-		call delete(l:tempname)
-	endtry
+  let l:tempname = tempname()
+  " fzf | awk '{ print $1":1:0" }' > file
+  execute 'silent !fzf --multi ' . '| awk ''{ print $1":1:0" }'' > ' . fnameescape(l:tempname)
+  try
+    execute 'cfile ' . l:tempname
+    redraw!
+  finally
+    call delete(l:tempname)
+  endtry
 endfunction
 
 " :Rg [pattern]
 command! -nargs=* Rg call RG(<q-args>)
 function! RG(args) abort
-	let l:tempname = tempname()
-	let l:pattern = '.'
-	if len(a:args) > 0
-		let l:pattern = a:args
-	endif
-	" rg --vimgrep <pattern> | fzf -m > file
-	execute 'silent !rg --vimgrep ''' . l:pattern . ''' | fzf -m > ' . fnameescape(l:tempname)
-	try
-		execute 'cfile ' . l:tempname
-		redraw!
-	finally
-		call delete(l:tempname)
-	endtry
+  let l:tempname = tempname()
+  let l:pattern = '.'
+  if len(a:args) > 0
+    let l:pattern = a:args
+  endif
+  " rg --vimgrep <pattern> | fzf -m > file
+  execute 'silent !rg --vimgrep ''' . l:pattern . ''' | fzf -m > ' . fnameescape(l:tempname)
+  try
+    execute 'cfile ' . l:tempname
+    redraw!
+  finally
+    call delete(l:tempname)
+  endtry
 endfunction
 
 " Git status
