@@ -202,7 +202,7 @@ nmap <leader>bN :e ~/tmp/vim/buffer<cr>
 " Quickly open a markdown buffer for scribble
 nmap <leader>bm :e ~/tmp/vim/buffer.md<cr>
 " Switch CWD to the directory of the open buffer.
-nmap <leader>cd :cd %:p:h<cr>:pwd<cr>
+nmap <leader>cd :lcd %:p:h<cr>:pwd<cr>
 
 " Windows navigations
 nmap <C-j> <C-W>j
