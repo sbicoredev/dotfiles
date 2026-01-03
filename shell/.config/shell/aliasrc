@@ -43,7 +43,7 @@ alias psgrep="ps aux | grep -v grep | grep -i -e VSZ -e"
 alias psmem='ps auxf | sort -nr -k 4'
 alias pscpu='ps auxf | sort -nr -k 3'
 alias chs="tldr --list | fzf --preview 'tldr {1}' | xargs tldr"
-alias cfg='fdfind -t f -H . ~/dotfiles | fzf --preview="batcat --color=always {} | head -200" | xargs -or vim'
+alias dots='fdfind -t f -H . ~/dotfiles | fzf --preview="batcat --color=always {} | head -200" | xargs -or vim'
 
 # -------------------- eza (better ls) --------------------
 alias ls="eza --icons -a"
