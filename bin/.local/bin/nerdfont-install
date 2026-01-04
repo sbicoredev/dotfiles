@@ -10,10 +10,17 @@ fi
 for font in "$@"; do
   zip_file="$font.zip"
   download_url="https://github.com/ryanoasis/nerd-fonts/releases/latest/download/$zip_file"
-  echo "Downloading $download_url"
+
+  echo -e "Downloading $download_url in /tmp dir \n"
   wget -O "/tmp/$zip_file" "$download_url"
+
+  echo -e "Unzipping the file $zip_file \n"
   unzip "/tmp/$zip_file" -d "/tmp/$font/"
+
+  echo -e "Moving the file $zip_file to $fonts_dir \n"
   mv /tmp/$font/*.ttf $fonts_dir
+
+  echo -e "Removing the tmp file \n"
   rm "/tmp/$zip_file"
   rm -rf "/tmp/$font/"
 done
