@@ -130,17 +130,17 @@ hi Normal guibg=NONE ctermbg=NONE " Set background transparent
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set laststatus=2
 set statusline=
-set statusline+=%4*\ %{StatuslineMode()}\ %*                 "Vim mode
-set statusline+=%2*%{b:git_branch}%*                       "Git Status
-" set statusline+=%1*\ buff:%n\ %*                             "Buffer number
-set statusline+=%1*\ \󰷉\ %f\ %*                              "File path
-set statusline+=%1*%m%*                                      "Modified flag
-set statusline+=%1*\ %=\ %*                                  "Space between
-" set statusline+=%5*\ %{&spelllang}\%{HighlightSearch()}\     "Spellanguage & Highlight on?
-set statusline+=%1*\ %P\ \|\ %L\ L\ %*                       "Line and column number
-set statusline+=%5*\ \\ %y\ %*                              "File type
-set statusline+=%3*\ %{&fenc!=''?&fenc:&enc}[%{&ff}]\ %*     "Encoding
-set statusline+=%4*\ \ %{strftime('%H:%M')}\ %*                "Time string
+set statusline+=%4*\ %{StatuslineMode()}\ %*                   "Vim mode
+set statusline+=%2*%{b:git_branch}%*                           "Git Status
+" set statusline+=%1*\ buff:%n\ %*                               "Buffer number
+set statusline+=%1*\ \󰷉\ %f\ %*                                "File path
+set statusline+=%1*%m%*                                        "Modified flag
+set statusline+=%1*\ %=\ %*                                    "Space between
+" set statusline+=%5*\ %{&spelllang}\%{HighlightSearch()}\       "Spellanguage & Highlight on?
+set statusline+=%1*\ %P\ \|\ %L\ L\ %*                         "Line and column number
+set statusline+=%5*\ \\ %y\ %*                                "File type
+set statusline+=%3*\ %{&fenc!=''?&fenc:&enc}[%{&ff}]\ %*       "Encoding
+set statusline+=%4*\ \ %{strftime('%H:%M')}\ %*               "Time string
 
 "  Colors
 hi User1 guibg=NONE guifg=#ffffff 
@@ -155,19 +155,22 @@ hi User6 guibg=#6c7086 guifg=#ffffff
 " -> Keybindings
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let mapleader = " "
+" Map the escape sequence <Esc>j to the Alt+j key (use <M-j> notation for mappings)
+map <Esc>j <A-j>
+map <Esc>k <A-k>
 
 " ':W' sudo saves the file (useful for handling the permission-denied error)
 command! W execute 'w !sudo tee % > /dev/null' <bar> edit!
-nmap <leader>q :q<cr>
-nmap <leader>R :so ~/.vimrc<cr>
+nnoremap <leader>q :q<cr>
+nnoremap <leader>R :so ~/.vimrc<cr>
 " Clear search highlights
 nnoremap <leader><esc> :noh<cr>
 " Open file explorer
 nnoremap <leader>e :Ex<cr>
 " Ctrl + s to save file
-nmap <C-s> :w<cr>
-imap <C-s> <esc>:w<cr>
-vmap <C-s> :w<cr>
+nnoremap <C-s> :w<cr>
+inoremap <C-s> <esc>:w<cr>
+vnoremap <C-s> :w<cr>
 
 " Type jj to exit insert mode quickly.
 inoremap jj <Esc>
@@ -175,13 +178,11 @@ inoremap jj <Esc>
 " Pageup/down will scroll half-page and center the current line on the screen
 nmap     <silent> <C-u>      <C-U>zz
 nmap     <silent> <C-d>      <C-D>zz
-nnoremap <silent> <C-u>      <C-U>zz
-nnoremap <silent> <C-d>      <C-D>zz
-nnoremap <silent> <PageUp>   <C-U>zz
-vnoremap <silent> <PageUp>   <C-U>zz
+nnoremap <silent> <PageUp>   <C-u>
+vnoremap <silent> <PageUp>   <C-u>
 inoremap <silent> <PageUp>   <C-O><C-U><C-O>zz
-nnoremap <silent> <PageDown> <C-D>zz
-vnoremap <silent> <PageDown> <C-D>zz
+nnoremap <silent> <PageDown> <C-d>
+vnoremap <silent> <PageDown> <C-d>
 inoremap <silent> <PageDown> <C-O><C-D><C-O>zz
 
 
@@ -191,44 +192,44 @@ inoremap <silent> <PageDown> <C-O><C-D><C-O>zz
 " :Bonly close all the buffers except current only
 command! Bonly silent! execute "%bd|e#|bd#"
 " Buffer navigation
-nmap <leader>bn :bnext<cr>
-nmap <leader>bp :bprevious<cr>
+nnoremap <leader>bn :bnext<cr>
+nnoremap <leader>bp :bprevious<cr>
 " Close the current buffer
-nmap <leader>bd :Bdelete<cr>
+nnoremap <leader>bd :Bdelete<cr>
 " Close all the buffers except current
-nmap <leader>bo :Bonly<cr>
+nnoremap <leader>bo :Bonly<cr>
 " Quickly open a buffer for scribble
-nmap <leader>bN :e ~/tmp/vim/buffer<cr>
+nnoremap <leader>bN :e ~/tmp/vim/buffer<cr>
 " Quickly open a markdown buffer for scribble
-nmap <leader>bm :e ~/tmp/vim/buffer.md<cr>
+nnoremap <leader>bm :e ~/tmp/vim/buffer.md<cr>
 " Switch CWD to the directory of the open buffer.
-nmap <leader>cd :lcd %:p:h<cr>:pwd<cr>
+nnoremap <leader>cd :lcd %:p:h<cr>:pwd<cr>
 
 " Windows navigations
-nmap <C-j> <C-W>j
-nmap <C-k> <C-W>k
-nmap <C-h> <C-W>h
-nmap <C-l> <C-W>l
-nmap <leader>w <C-W>
-nmap <leader>\ :vsplit<cr>
-nmap <leader>- :split<cr>
+nnoremap <C-j> <C-W>j
+nnoremap <C-k> <C-W>k
+nnoremap <C-h> <C-W>h
+nnoremap <C-l> <C-W>l
+nnoremap <leader>w <C-W>
+nnoremap <leader>\ :vsplit<cr>
+nnoremap <leader>- :split<cr>
 
 " Tabs navigations
-nmap <S-l> :tabn<cr>
-nmap <S-h> :tabp<cr>
-nmap <tab> :tabn<cr>
-nmap <S-tab> :tabp<cr>
-nmap <leader>tn :tabnew<cr>
-nmap <leader>tc :tabclose<cr>
-nmap <leader>to :tabonly<cr>
-nmap <leader>tm :tabmove
+nnoremap <S-l> :tabn<cr>
+nnoremap <S-h> :tabp<cr>
+nnoremap <tab> :tabn<cr>
+nnoremap <S-tab> :tabp<cr>
+nnoremap <leader>tn :tabnew<cr>
+nnoremap <leader>tc :tabclose<cr>
+nnoremap <leader>to :tabonly<cr>
+nnoremap <leader>tm :tabmove
 " Toggle between this and the last accessed tab
 let g:lasttab = 1
-nmap <leader>tl :exe "tabn ".g:lasttab<CR>
+nnoremap <leader>tl :exe "tabn ".g:lasttab<CR>
 au TabLeave * let g:lasttab = tabpagenr()
 " Opens a new tab with the current buffer's path
 " Super useful when editing files in the same directory
-nmap <leader>te :tabedit <C-r>=escape(expand("%:p:h"), " ")<cr>/
+nnoremap <leader>te :tabedit <C-r>=escape(expand("%:p:h"), " ")<cr>/
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -246,12 +247,12 @@ vnoremap > :><cr>gv
 " -> Editing mappings
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Move a line of text using ALT+[jk] or Command+[jk] on mac
-nnoremap <C-S-j> :m.+1<cr>
-nnoremap <C-S-k> :m.-2<cr>
-inoremap <C-S-j> <esc>:m.+1<cr>
-inoremap <C-S-k> <esc>:m.-2<cr>
-vnoremap <C-S-j> :m'>+1<cr>gv=gv
-vnoremap <C-S-k> :m'<-2<cr>gv=gv
+nnoremap <A-j> :m.+1<cr>
+nnoremap <A-k> :m.-2<cr>
+inoremap <A-j> <esc>:m.+1<cr>
+inoremap <A-k> <esc>:m.-2<cr>
+vnoremap <A-j> :m'>+1<cr>gv=gv
+vnoremap <A-k> :m'<-2<cr>gv=gv
 " Return to last edit position when opening files.
 " au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 if has("autocmd")
@@ -272,13 +273,13 @@ nnoremap <leader>fg :Rg<cr>
 " -> Spell checking
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Pressing ,ss will toggle and untoggle spell checking
-nmap <leader>ss :setlocal spell!<cr>
+nnoremap <leader>ss :setlocal spell!<cr>
 
 " Shortcuts using <leader>
-nmap <leader>sn ]s
-nmap <leader>sp [s
-nmap <leader>sa zg
-nmap <leader>s? z=
+nnoremap <leader>sn ]s
+nnoremap <leader>sp [s
+nnoremap <leader>sa zg
+nnoremap <leader>s? z=
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
