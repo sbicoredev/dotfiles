@@ -5,25 +5,30 @@ export LANGUAGE=en_US.UTF-8
 # -------------------- XDG paths --------------------
 export XDG_CONFIG_HOME=${XDG_CONFIG_HOME:="$HOME/.config"}
 export XDG_CACHE_HOME=${XDG_CACHE_HOME:="$HOME/.cache"}
+export XDG_LIB_HOME=${XDG_LIB_HOME:="$HOME/.local/lib"}
 export XDG_DATA_HOME=${XDG_DATA_HOME:="$HOME/.local/share"}
 export XDG_STATE_HOME=${XDG_STATE_HOME:="$HOME/.local/state"}
-export XDG_PICTURES_DIR=${XDG_PICTURES_DIR:="$HOME/picures"}
+export XDG_PICTURES_DIR=${XDG_PICTURES_DIR:="$HOME/Pictures"}
 
 # -------------------- $HOME dir clean up --------------------
 export ZDOTDIR=$XDG_CONFIG_HOME/zsh
-export DOTNET_ROOT=$XDG_DATA_HOME/dotnet
-export BUN_INSTALL="$XDG_DATA_HOME/bun"
+export WGETRC=$XDG_CONFIG_HOME/wgetrc
+export RIPGREP_CONFIG_PATH=$XDG_CONFIG_HOME/ripgrep/ripgreprc
 export PYTHONSTARTUP=$XDG_CONFIG_HOME/python/pythonrc
+export NPM_CONFIG_USERCONFIG=$XDG_CONFIG_HOME/npm/npmrc
+# dotnet
+export DOTNET_ROOT=$XDG_LIB_HOME/dotnet
+# bun
+export BUN_INSTALL="$XDG_DATA_HOME/bun"
+# go
 export GOPATH=$XDG_DATA_HOME/go
 export GOMODCACHE=$XDG_CACHE_HOME/go/mod
+# rust
 export RUSTUP_HOME="$XDG_DATA_HOME"/rustup
 export CARGO_HOME=$XDG_DATA_HOME/cargo
-export NPM_CONFIG_USERCONFIG=$XDG_CONFIG_HOME/npm/npmrc
-export RIPGREP_CONFIG_PATH=$XDG_CONFIG_HOME/ripgrep/ripgreprc
+# gpg
 export GNUPGHOME="$XDG_DATA_HOME"/gnupg
 export PASSWORD_STORE_DIR="$XDG_DATA_HOME"/pass
-export WGETRC=$XDG_CONFIG_HOME/wgetrc
-export _JAVA_OPTIONS=-Djava.util.prefs.userRoot=$XDG_CONFIG_HOME/java
 
 # -------------------- other program settings --------------------
 # Start blinking

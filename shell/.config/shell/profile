@@ -5,12 +5,18 @@ typeset -U PATH path
 
 # add all directories in `~/.local/bin/` to $PATH
 export PATH="$PATH:$(find -L ~/.local/bin -type d | paste -sd ':' -)"
+# neovim
+export PATH="$XDG_LIB_HOME/nvim-linux-x86_64/bin:$PATH"
+# bun
 export PATH="$BUN_INSTALL/bin:$PATH"
-export PATH="${DOTNET_ROOT:-$HOME/.local/share/dotnet}:$HOME/.dotnet/tools:$PATH"
-export PATH="/usr/local/go/bin:$HOME/.local/lib/go/bin:${GOPATH:-$HOME/.local/share/go}/bin:$PATH"
-export PATH="$HOME/.config/herd-lite/bin:$PATH"
-export PATH="$HOME/.local/lib/nvim-linux-x86_64/bin:$PATH"
-export PHP_INI_SCAN_DIR="$HOME/.config/herd-lite/bin:$PHP_INI_SCAN_DIR"
+# dotnet
+export PATH="${DOTNET_ROOT:-$XDG_LIB_HOME/dotnet}:$PATH"
+export PATH="$HOME/.dotnet/tools:$PATH"
+# go
+export PATH="/usr/local/go/bin:${GOROOT:-$XDG_LIB_HOME/go}/bin:${GOPATH:-$XDG_DATA_HOME/go}/bin:$PATH"
+# php
+export PATH="$XDG_CONFIG_HOME/herd-lite/bin:$PATH"
+export PHP_INI_SCAN_DIR="$XDG_CONFIG_HOME/herd-lite/bin:$PHP_INI_SCAN_DIR"
 
 # -------------------- default programs --------------------
 export BROWSER="google-chrome"
