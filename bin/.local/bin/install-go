@@ -2,31 +2,14 @@
 
 set -e
 
-# Variables
 GO_URL="https://go.dev/dl/"
-INSTALL_DIR="$HOME/.local/lib"
-
-echo -e "\nFetching the latest Go version..."
-
-# Get latest version dynamically
 LATEST_VERSION=$(curl -s https://go.dev/VERSION?m=text | awk 'FNR == 1')
 GO_ARCHIVE="${LATEST_VERSION}.linux-amd64.tar.gz"
 DOWNLOAD_URL="${GO_URL}${GO_ARCHIVE}"
 
-if command -v go &> /dev/null; then
-	INSTALLED_VERSION=$(go version | awk '{print $3}')
+INSTALL_DIR="$HOME/.local/lib/go"
 
-	if [[ "$INSTALLED_VERSION" == "$LATEST_VERSION" ]]; then
-		echo -e "\nLatest go version is already installed"
-	else
-		echo -e "\nRemoving old Go installation (if any)..."
-		sudo rm -rf "${INSTALL_DIR}/go"
-		download_latest_version
-	fi
-else
-	download_latest_version
-fi
-
+# Get latest version dynamically
 download_latest_version() {
 	echo -e "\nLatest version: $LATEST_VERSION"
 	echo -e "\nDownloading $DOWNLOAD_URL..."
@@ -34,8 +17,8 @@ download_latest_version() {
 	curl -LO "$DOWNLOAD_URL"
 
 	# Extract and install Go
-	echo -e "\nInstalling Go to ${INSTALL_DIR}/go..."
-	sudo tar -C "$INSTALL_DIR" -xzf "$GO_ARCHIVE"
+	echo -e "\nInstalling Go to ${INSTALL_DIR}..."
+	tar -C "$INSTALL_DIR/.." -xzf "$GO_ARCHIVE"
 
 	# Clean up archive
 	rm "$GO_ARCHIVE"
@@ -46,3 +29,20 @@ download_latest_version() {
 	echo -e "\n✅ Go $LATEST_VERSION installed successfully!"
 	go version
 }
+
+echo -e "\nFetching the latest Go version..."
+
+if command -v go &> /dev/null; then
+	INSTALLED_VERSION=$(go version | awk '{print $3}')
+
+	if [[ "$INSTALLED_VERSION" == "$LATEST_VERSION" ]]; then
+		echo -e "\nLatest go version is already installed"
+	else
+		echo -e "\nRemoving old Go installation (if any)..."
+		rm -rf "${INSTALL_DIR}"
+		download_latest_version
+	fi
+else
+	download_latest_version
+fi
+
