@@ -1,8 +1,6 @@
 # zmodload zsh/zprof
 
 # -------------------- settings --------------------
-# neofetch
-# figlet -c "WELCOME SAJID"
 setopt autocd		
 setopt interactive_comments
 # disable ctrl-s to freeze terminal.
@@ -95,15 +93,17 @@ bindkey '^v' edit-command-line
 eval "$(zoxide init zsh)"
 eval "$(uv generate-shell-completion zsh)"
 eval "$(uvx --generate-shell-completion zsh)"
+# Set up fzf key bindings and fuzzy completion
+source <(fzf --zsh)
 
 # -------------------- fzf config --------------------
 show_file_or_dir_preview='[ -d {} ] && eza -1a --icons=always --color=always --tree --level=5 --ignore-glob=".git|node_modules|.next" {} | head -200 || batcat -n --color=always --line-range :500 {}'
 
 export FZF_DEFAULT_COMMAND='fdfind --hidden --strip-cwd-prefix --exclude .git'
-export FZF_DEFAULT_OPTS="--reverse --height 60% --border --prompt '  ' --preview '$show_file_or_dir_preview' --color=bg:#0a0f0f,prompt:cyan,pointer:cyan,marker:cyan,spinner:cyan"
+export FZF_DEFAULT_OPTS="--reverse --height 60% --border --prompt '  ' --color=bg:#0a0f0f,prompt:cyan,pointer:cyan,marker:cyan,spinner:cyan"
 # ctlr-t key options
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-export FZF_CTRL_T_OPTS="$FZF_DEFAULT_OPTS"
+export FZF_CTRL_T_OPTS="$FZF_DEFAULT_OPTS --preview '$show_file_or_dir_preview' "
 # alt-c key options for directory only
 export FZF_ALT_C_COMMAND="$FZF_DEFAULT_COMMAND --type=d"
 export FZF_ALT_C_OPTS='--preview "eza -1a --icons=always --color=always --tree --level=5 --ignore-glob=\".git|node_modules|.next\" {} | head -200"'
@@ -128,9 +128,6 @@ bindkey -M vicmd '\es' sesh-sessions
 bindkey -M viins '\es' sesh-sessions
 
 # -------------------- shortcut aliases --------------------
-alias source-ls="lt /etc/apt/ --level=3"
-alias hs="home-manager switch --flake ~/dotfiles/nix/home-manager#$USER --impure"
-alias nix-bin="ls ~/.nix-profile/bin"
 alias weather="curl -4 wttr.in/chattogram"
 alias cd="z"
 # # sudo not required for some system commands
@@ -141,9 +138,6 @@ alias cd="z"
 
 # Start graphical server on user's current tty if not already running.
 # [ "$(tty)" = "/dev/tty1" ] && ! pidof -s Xorg >/dev/null 2>&1 && exec startx "$XINITRC"
-
-# wezterm
-[ -n "$WEZTERM_PANE" ] && export NVIM_LISTEN_ADDRESS="/tmp/nvim$WEZTERM_PANE"
 
 # remove duplicate path
 typeset -U PATH path
